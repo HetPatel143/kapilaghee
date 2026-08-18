@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — sourced from docs/design-system.md.
+ * These are the ONLY palette/type/spacing values the site uses.
+ * Admin (Phase 2) edits content that flows through these tokens; it never edits the tokens themselves.
+ */
+@theme {
+  --color-maroon: #8f1d18;
+  --color-maroon-dark: #6e120f;
+  --color-kapila-gold: #f4c542;
+  --color-warm-gold: #d99a25;
+  --color-cream: #fff8e7;
+  --color-dark-brown: #3b2118;
+
+  --color-ink: #2a1b14;
+  --color-muted: #7a6a5c;
+  --color-border: #e7d9be;
+  --color-success: #4b7a3b;
+  --color-error: #b3261e;
+
+  --font-heading: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-kapila-gold);
+  color: var(--color-maroon-dark);
+}
+
+/* Visible, on-brand focus ring for keyboard users — never relying on color alone */
+:focus-visible {
+  outline: 2px solid var(--color-maroon);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
