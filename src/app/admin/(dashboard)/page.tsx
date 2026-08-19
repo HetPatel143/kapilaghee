@@ -8,6 +8,7 @@ export const metadata: Metadata = { title: "Dashboard | Kapila Admin" };
 
 const QUICK_ACTIONS = [
   { href: "/admin/products/new", label: "Add Product" },
+  { href: "/admin/enquiries", label: "View Enquiries" },
   { href: "/admin/content/home", label: "Edit Homepage" },
   { href: "/admin/faqs", label: "Manage FAQs" },
   { href: "/admin/documents", label: "Upload Document" },
@@ -26,7 +27,7 @@ export default async function AdminDashboardPage() {
         <StatCard label="Active Sizes" value={stats.activeVariantCount} />
         <StatCard label="Published FAQs" value={stats.faqCount} />
         <StatCard label="Quality Documents" value={stats.documentCount} />
-        <StatCard label="New Enquiries" value={stats.enquiryCount} />
+        <StatCard label="New Enquiries" value={stats.enquiryCount} href="/admin/enquiries" />
       </div>
 
       <div className="mt-10">

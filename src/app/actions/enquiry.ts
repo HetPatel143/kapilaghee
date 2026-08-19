@@ -45,7 +45,7 @@ export async function submitEnquiry(
     await db.enquiry.create({
       data: {
         name,
-        phone,
+        phone: `+91${phone}`,
         message,
         productId: productId || null,
         variantId: variantId || null,

@@ -1,6 +1,7 @@
 export const ADMIN_NAV = [
   { href: "/admin", label: "Dashboard", exact: true },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/enquiries", label: "Enquiries" },
   {
     label: "Content",
     children: [

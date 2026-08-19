@@ -36,7 +36,7 @@ export function EnquiryForm({
       `Hi Kapila Dairy Farm, I'm ${name}.`,
       contextLabel ? `Regarding: ${contextLabel}.` : null,
       message,
-      `(My WhatsApp: ${phone})`,
+      `(My WhatsApp: +91 ${phone})`,
     ].filter(Boolean);
 
     const url = `https://wa.me/${toWhatsAppDigits(whatsappNumber)}?text=${encodeURIComponent(lines.join(" "))}`;
@@ -87,15 +87,26 @@ export function EnquiryForm({
         />
       </Field>
 
-      <Field label="WhatsApp Number" htmlFor="phone" error={state.fieldErrors?.phone} hint="Include country code, e.g. 91 98765 43210">
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          required
-          autoComplete="tel"
-          className={inputClasses(Boolean(state.fieldErrors?.phone))}
-        />
+      <Field label="WhatsApp Number" htmlFor="phone" error={state.fieldErrors?.phone} hint="10-digit mobile number">
+        <div className={cn("flex overflow-hidden rounded-sm border bg-white", state.fieldErrors?.phone ? "border-error" : "border-border")}>
+          <span className="flex items-center border-r border-border bg-black/[0.03] px-3.5 text-sm text-muted">
+            +91
+          </span>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputMode="numeric"
+            autoComplete="tel-national"
+            required
+            maxLength={10}
+            pattern="\d{10}"
+            onInput={(e) => {
+              e.currentTarget.value = e.currentTarget.value.replace(/\D/g, "").slice(0, 10);
+            }}
+            className="w-full border-0 bg-transparent px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:outline-none"
+          />
+        </div>
       </Field>
 
       <Field label="Message" htmlFor="message" error={state.fieldErrors?.message}>

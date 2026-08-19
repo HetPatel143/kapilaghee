@@ -5,8 +5,7 @@ export const enquirySchema = z.object({
   phone: z
     .string()
     .trim()
-    .min(7, "Please enter a valid WhatsApp number.")
-    .max(20, "Please enter a valid WhatsApp number."),
+    .regex(/^\d{10}$/, "Please enter a valid 10-digit mobile number."),
   message: z.string().trim().min(5, "Please add a short message."),
   productId: z.string().trim().optional().or(z.literal("")),
   variantId: z.string().trim().optional().or(z.literal("")),

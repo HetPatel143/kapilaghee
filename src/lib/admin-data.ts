@@ -69,3 +69,10 @@ export async function listPageSectionsAdmin(page: PageKey) {
 export async function getBusinessSettingsAdmin() {
   return db.businessSettings.findFirst();
 }
+
+export async function listEnquiriesAdmin() {
+  return db.enquiry.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { product: true, variant: true },
+  });
+}
