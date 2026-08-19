@@ -12,7 +12,7 @@ export function HeroSection({
   sections: PageSectionWithRelations[];
 }) {
   const hero = findSection(sections, "hero");
-  const image = product ? getPrimaryProductImage(product) : null;
+  const image = hero?.media[0]?.media ?? (product ? getPrimaryProductImage(product) : null);
   const title = hero?.title ?? "Pure A2 Gir Cow Ghee";
   const body = hero?.body ?? "Pure ghee. Nothing added.";
 

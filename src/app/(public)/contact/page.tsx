@@ -55,7 +55,7 @@ export default async function ContactPage({ searchParams }: Props) {
         <Container>
           <SectionHeading eyebrow="Contact" title="Get in Touch" description="We'd be happy to help." />
 
-          <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
             <div>
               <h2 className="font-heading text-2xl font-semibold text-maroon">Visit Kapila Dairy Farm</h2>
               {settings?.address ? (

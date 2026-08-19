@@ -94,6 +94,22 @@ async function main() {
     },
   });
 
+  // A distinct, tighter crop of the same jar photo used just for the homepage Hero, so the
+  // Hero and the product gallery don't show the exact same framing back-to-back.
+  const jarHeroMedia = await db.media.upsert({
+    where: { id: "media-ghee-jar-hero" },
+    update: { width: 1000, height: 1250, fileSize: 133354 },
+    create: {
+      id: "media-ghee-jar-hero",
+      url: "/images/product/ghee-jar-hero.jpeg",
+      altText: "Kapila Dairy Farm Desi Cow Ghee glass jar, close up",
+      width: 1000,
+      height: 1250,
+      fileType: "image/jpeg",
+      fileSize: 133354,
+    },
+  });
+
   const cowMedallionMedia = await db.media.upsert({
     where: { id: "media-cow-medallion" },
     update: {},
@@ -239,9 +255,14 @@ async function main() {
   // ---------- Page Sections ----------
 
   // Home
-  await upsertSection("home", "hero", {
+  const heroSection = await upsertSection("home", "hero", {
     title: "Pure A2 Gir Cow Ghee",
     body: "Pure ghee. Nothing added.",
+  });
+  await db.pageSectionMedia.upsert({
+    where: { pageSectionId_mediaId: { pageSectionId: heroSection.id, mediaId: jarHeroMedia.id } },
+    update: {},
+    create: { pageSectionId: heroSection.id, mediaId: jarHeroMedia.id, sortOrder: 0 },
   });
   await upsertSection("home", "why-kapila-intro", {
     title: "Why Kapila",
@@ -299,12 +320,20 @@ async function main() {
   // Story page
   await upsertSection("story", "story-intro", {
     title: "Our Story",
-    body: "Kapila Dairy Farm is a Gir cow ghee business based in Village Masma, Taluka Olpad, Surat, Gujarat.",
+    body: [
+      "Kapila Dairy Farm is a Gir cow ghee business based in Village Masma, Taluka Olpad, Surat, Gujarat. We started with one belief: ghee should be made the way it always was — slowly, by hand, with nothing added.",
+      "That's why we work only with Gir cow milk, and why we still make our ghee the traditional way: the milk is set into curd, hand-churned in a wooden bilona to separate the butter, and then slow-heated into ghee. It takes longer than shortcuts would, but it's how we keep the flavor and quality consistent, batch after batch.",
+      "Everything we make comes out of our FSSAI-licensed facility here in Surat, and every batch is tested for purity by an independent lab before it's ready to go out — you can see the actual certificates on our Quality & Purity page.",
+      "No additives, no shortcuts — just pure ghee, made the way it should be.",
+    ].join("\n\n"),
   });
-  await upsertSection("story", "story-placeholder", {
+  // "story-placeholder" section is kept in the DB (status inactive) rather than deleted,
+  // in case Admin wants to reactivate a "more to come" note for a future update.
+  const storyPlaceholder = await upsertSection("story", "story-placeholder", {
     title: "More to Come",
-    body: "We're putting together the full story of Kapila Dairy Farm — our journey, our philosophy, and the people behind it. Check back soon.",
+    body: "We're putting together more of the Kapila Dairy Farm story to share here. Check back soon.",
   });
+  await db.pageSection.update({ where: { id: storyPlaceholder.id }, data: { status: "inactive" } });
 
   // Process page — confirmed by the business (2026-08-19) as an accurate description of
   // how Kapila Ghee is made, resolving the open item flagged in docs/requirements.md §2.

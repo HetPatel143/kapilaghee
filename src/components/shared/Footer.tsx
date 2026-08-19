@@ -14,15 +14,15 @@ export function Footer({ settings }: { settings: BusinessSettings | null }) {
 
   return (
     <footer className="bg-dark-brown text-cream/90">
-      <Container className="grid gap-x-8 gap-y-12 py-16 sm:grid-cols-2 sm:py-20 lg:grid-cols-4 lg:py-24">
-        <div className="sm:col-span-2 lg:col-span-1">
+      <Container className="flex flex-wrap gap-x-12 gap-y-12 py-16 sm:py-20 lg:py-24">
+        <div className="min-w-[220px] flex-[2_1_260px]">
           <Logo tone="cream" />
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/70">
             Pure A2 Gir Cow Ghee — no added ingredients, crafted in Surat, Gujarat.
           </p>
         </div>
 
-        <div>
+        <div className="min-w-[140px] flex-1">
           <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-kapila-gold">Explore</h3>
           <ul className="mt-5 space-y-3">
             {NAV_LINKS.map((link) => (
@@ -35,7 +35,7 @@ export function Footer({ settings }: { settings: BusinessSettings | null }) {
           </ul>
         </div>
 
-        <div>
+        <div className="min-w-[180px] flex-1">
           <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-kapila-gold">Visit Us</h3>
           {settings?.address ? (
             <address className="mt-5 whitespace-pre-line text-sm not-italic leading-relaxed text-cream/75">
@@ -45,7 +45,7 @@ export function Footer({ settings }: { settings: BusinessSettings | null }) {
         </div>
 
         {contactActions.length > 0 || social.length > 0 ? (
-          <div>
+          <div className="min-w-[160px] flex-1">
             <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-kapila-gold">Get in Touch</h3>
             <ul className="mt-5 space-y-3">
               {contactActions
