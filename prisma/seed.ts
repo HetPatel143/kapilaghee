@@ -98,7 +98,7 @@ async function main() {
   // Hero and the product gallery don't show the exact same framing back-to-back.
   const jarHeroMedia = await db.media.upsert({
     where: { id: "media-ghee-jar-hero" },
-    update: { width: 1000, height: 1250, fileSize: 133354 },
+    update: { width: 1000, height: 1250, fileSize: 146811 },
     create: {
       id: "media-ghee-jar-hero",
       url: "/images/product/ghee-jar-hero.jpeg",
@@ -106,7 +106,7 @@ async function main() {
       width: 1000,
       height: 1250,
       fileType: "image/jpeg",
-      fileSize: 133354,
+      fileSize: 146811,
     },
   });
 
