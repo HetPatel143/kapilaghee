@@ -38,21 +38,21 @@ export function HeroSection({
           </h1>
           <p className="mt-5 max-w-md text-lg leading-relaxed text-ink/80">{body}</p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <LinkButton href="/our-ghee" size="lg">
-              Explore Our Ghee
-            </LinkButton>
-            <LinkButton href="/contact" variant="secondary" size="lg">
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <LinkButton href="/contact" size="lg">
               Enquire Now
+            </LinkButton>
+            <LinkButton href="/our-ghee" variant="ghost" className="px-0">
+              Explore Our Ghee &rarr;
             </LinkButton>
           </div>
         </div>
 
         <div className="flex justify-center lg:justify-end">
-          <div className="relative flex aspect-[4/5] w-full max-w-sm items-center justify-center rounded-md bg-white/40 p-8 sm:max-w-md">
+          <div className="relative flex aspect-[4/5] w-full max-w-sm items-center justify-center sm:max-w-md">
             <div
               aria-hidden="true"
-              className="absolute inset-6 rounded-full bg-kapila-gold/20"
+              className="absolute inset-10 rounded-full bg-kapila-gold/15"
             />
             {image ? (
               <Image

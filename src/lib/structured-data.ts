@@ -50,7 +50,7 @@ export function buildProductJsonLd(product: ProductWithRelations, siteUrl: strin
     "@type": "Product",
     name: product.name,
     description: product.description,
-    url: `${siteUrl}/our-ghee/${product.slug}`,
+    url: `${siteUrl}/our-ghee`,
     brand: { "@type": "Brand", name: brandName },
     ...(image ? { image: `${siteUrl}${image.url}` } : {}),
   };

@@ -6,7 +6,7 @@ import { enquirySchema } from "@/lib/validation/enquiry";
 export type EnquiryFormState = {
   status: "idle" | "success" | "error";
   message?: string;
-  fieldErrors?: Partial<Record<"name" | "phone" | "email" | "message", string>>;
+  fieldErrors?: Partial<Record<"name" | "phone" | "message", string>>;
 };
 
 export async function submitEnquiry(
@@ -16,7 +16,6 @@ export async function submitEnquiry(
   const raw = {
     name: String(formData.get("name") ?? ""),
     phone: String(formData.get("phone") ?? ""),
-    email: String(formData.get("email") ?? ""),
     message: String(formData.get("message") ?? ""),
     productId: String(formData.get("productId") ?? ""),
     variantId: String(formData.get("variantId") ?? ""),
@@ -29,7 +28,7 @@ export async function submitEnquiry(
     const fieldErrors: EnquiryFormState["fieldErrors"] = {};
     for (const issue of parsed.error.issues) {
       const key = issue.path[0];
-      if (key === "name" || key === "phone" || key === "email" || key === "message") {
+      if (key === "name" || key === "phone" || key === "message") {
         fieldErrors[key] = issue.message;
       }
     }
@@ -40,14 +39,13 @@ export async function submitEnquiry(
     };
   }
 
-  const { name, phone, email, message, productId, variantId } = parsed.data;
+  const { name, phone, message, productId, variantId } = parsed.data;
 
   try {
     await db.enquiry.create({
       data: {
         name,
-        phone: phone || null,
-        email: email || null,
+        phone,
         message,
         productId: productId || null,
         variantId: variantId || null,

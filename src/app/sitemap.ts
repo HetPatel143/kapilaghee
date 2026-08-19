@@ -1,18 +1,16 @@
 import type { MetadataRoute } from "next";
-import { getActiveProducts } from "@/lib/data";
 
 const siteUrl = process.env.SITE_URL ?? "https://www.kapiladairyfarm.com";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await getActiveProducts();
-
+export default function sitemap(): MetadataRoute.Sitemap {
+  // /our-ghee/[slug] now redirects to /our-ghee (single combined product page — see that
+  // route's page.tsx), so there are no separate per-product URLs to list here.
   const staticRoutes = [
     "",
     "/our-ghee",
     "/our-story",
     "/our-process",
     "/quality",
-    "/faq",
     "/contact",
     "/privacy",
     "/terms",
@@ -21,10 +19,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }));
 
-  const productRoutes = products.map((product) => ({
-    url: `${siteUrl}/our-ghee/${product.slug}`,
-    lastModified: product.updatedAt,
-  }));
-
-  return [...staticRoutes, ...productRoutes];
+  return staticRoutes;
 }

@@ -6,7 +6,7 @@ export type ContactAction = {
   kind: "phone" | "whatsapp" | "email" | "maps";
 };
 
-function toWhatsAppDigits(raw: string) {
+export function toWhatsAppDigits(raw: string) {
   return raw.replace(/[^\d]/g, "");
 }
 

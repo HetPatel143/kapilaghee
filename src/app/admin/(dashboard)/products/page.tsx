@@ -62,7 +62,7 @@ export default async function AdminProductsPage() {
                         Edit
                       </Link>
                       <a
-                        href={`/our-ghee/${product.slug}`}
+                        href="/our-ghee"
                         target="_blank"
                         rel="noreferrer noopener"
                         className="text-ink/60 hover:text-ink"

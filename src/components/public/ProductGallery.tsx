@@ -28,7 +28,7 @@ export function ProductGallery({
 
   if (!active) {
     return (
-      <div className="flex aspect-square items-center justify-center rounded-md bg-white">
+      <div className="flex aspect-square items-center justify-center">
         <p className="font-heading text-maroon/50">{productName}</p>
       </div>
     );
@@ -36,7 +36,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="flex aspect-square items-center justify-center rounded-md bg-white p-8 sm:aspect-[4/5]">
+      <div className="flex aspect-square items-center justify-center sm:aspect-[4/5]">
         <Image
           key={active.id}
           src={active.url}
@@ -45,7 +45,7 @@ export function ProductGallery({
           height={active.height ?? 1600}
           priority
           sizes="(min-width: 1024px) 480px, 90vw"
-          className="h-full w-auto max-w-full object-contain"
+          className="h-full w-auto max-w-full object-contain drop-shadow-[0_20px_30px_rgba(59,33,24,0.18)]"
         />
       </div>
 

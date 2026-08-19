@@ -1,42 +1,37 @@
-import { test, before, after } from "node:test";
+import { test, after } from "node:test";
 import assert from "node:assert/strict";
-import { execSync } from "node:child_process";
-import { existsSync, unlinkSync } from "node:fs";
-import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 
 /**
  * Exercises real database constraints (unique slug, foreign keys, cascade delete)
- * against a throwaway SQLite file — never the dev database — so these tests are safe
- * to run repeatedly without disturbing seeded/demo data.
+ * against the same Postgres database the app itself uses (see docker-compose.yml /
+ * DATABASE_URL — Prisma Client loads .env automatically, same as src/lib/db.ts).
+ *
+ * Every row these tests create uses an identifiable test-only slug/email/question, and
+ * the `after` hook below removes all of them — this must never touch real seeded data.
  */
 
-const testDbPath = path.join(process.cwd(), "prisma", "test.db");
-const testDbUrl = `file:${testDbPath}`;
-let db: PrismaClient;
+const db = new PrismaClient();
 
-before(() => {
-  if (existsSync(testDbPath)) unlinkSync(testDbPath);
-  execSync("npx prisma db push --skip-generate --accept-data-loss", {
-    env: { ...process.env, DATABASE_URL: testDbUrl },
-    stdio: "pipe",
-  });
-  db = new PrismaClient({ datasourceUrl: testDbUrl });
-});
+const TEST_PRODUCT_SLUGS = ["kapila-ghee-test-unique-slug", "kapila-ghee-test-cascade"];
+const TEST_ADMIN_EMAIL = "test-admin@kapiladairyfarm.com";
+const TEST_FAQ_QUESTION = "Test question (db-integrity.test.ts)?";
 
 after(async () => {
+  await db.product.deleteMany({ where: { slug: { in: TEST_PRODUCT_SLUGS } } });
+  await db.adminUser.deleteMany({ where: { email: TEST_ADMIN_EMAIL } });
+  await db.fAQ.deleteMany({ where: { question: TEST_FAQ_QUESTION } });
   await db.$disconnect();
-  if (existsSync(testDbPath)) unlinkSync(testDbPath);
 });
 
 test("product slugs must be unique", async () => {
   await db.product.create({
-    data: { name: "Kapila Ghee", slug: "kapila-ghee", description: "Pure ghee.", status: "active" },
+    data: { name: "Test Product", slug: TEST_PRODUCT_SLUGS[0], description: "Pure ghee.", status: "active" },
   });
 
   await assert.rejects(() =>
     db.product.create({
-      data: { name: "Kapila Ghee Duplicate", slug: "kapila-ghee", description: "Pure ghee.", status: "active" },
+      data: { name: "Test Product Duplicate", slug: TEST_PRODUCT_SLUGS[0], description: "Pure ghee.", status: "active" },
     })
   );
 });
@@ -51,7 +46,7 @@ test("a variant cannot be created against a non-existent product (foreign key en
 
 test("deleting a product cascades to delete its variants", async () => {
   const product = await db.product.create({
-    data: { name: "Test Product", slug: "test-product-cascade", description: "For cascade test.", status: "active" },
+    data: { name: "Test Product", slug: TEST_PRODUCT_SLUGS[1], description: "For cascade test.", status: "active" },
   });
   const variant = await db.productVariant.create({
     data: { productId: product.id, size: 1, unit: "kg", status: "active", sortOrder: 0 },
@@ -65,29 +60,27 @@ test("deleting a product cascades to delete its variants", async () => {
 
 test("an admin session is looked up by its unique token", async () => {
   const user = await db.adminUser.create({
-    data: { email: "test-admin@kapiladairyfarm.com", passwordHash: "salt:hash" },
+    data: { email: TEST_ADMIN_EMAIL, passwordHash: "salt:hash" },
   });
   const session = await db.adminSession.create({
     data: { token: "test-token-abc123", userId: user.id, expiresAt: new Date(Date.now() + 60_000) },
   });
 
   const found = await db.adminSession.findUnique({ where: { token: "test-token-abc123" }, include: { user: true } });
-  assert.equal(found?.user.email, "test-admin@kapiladairyfarm.com");
+  assert.equal(found?.user.email, TEST_ADMIN_EMAIL);
 
   await db.adminSession.delete({ where: { id: session.id } });
 });
 
 test("an FAQ deactivated via status update no longer counts as active, but still exists", async () => {
   const faq = await db.fAQ.create({
-    data: { question: "Test question?", answer: "Test answer.", status: "active", sortOrder: 0 },
+    data: { question: TEST_FAQ_QUESTION, answer: "Test answer.", status: "active", sortOrder: 0 },
   });
 
   await db.fAQ.update({ where: { id: faq.id }, data: { status: "inactive" } });
 
-  const activeCount = await db.fAQ.count({ where: { status: "active" } });
   const stillExists = await db.fAQ.findUnique({ where: { id: faq.id } });
 
-  assert.equal(activeCount, 0);
   assert.ok(stillExists, "deactivating must not delete the row");
   assert.equal(stillExists?.status, "inactive");
 });

@@ -23,7 +23,16 @@ export function ProductPurchasePanel({ product }: { product: ProductWithRelation
   function handleSelectVariant(variantId: string) {
     setSelectedVariantId(variantId);
     const matchIndex = product.images.findIndex((pm) => pm.variantId === variantId);
-    if (matchIndex !== -1) setActiveImageIndex(matchIndex);
+    if (matchIndex !== -1) {
+      setActiveImageIndex(matchIndex);
+      return;
+    }
+    // This size has no photo of its own — fall back to the "general" image (not tied to
+    // any specific size) rather than leaving whatever photo was showing before, which
+    // otherwise made the gallery look stuck when going from a size that has its own photo
+    // (e.g. 15kg) to one that doesn't (e.g. 1kg).
+    const generalIndex = product.images.findIndex((pm) => pm.variantId === null);
+    setActiveImageIndex(generalIndex !== -1 ? generalIndex : 0);
   }
 
   const enquireHref = selectedVariantId
