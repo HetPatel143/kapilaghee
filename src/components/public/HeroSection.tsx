@@ -49,7 +49,7 @@ export function HeroSection({
         </div>
 
         <div className="flex justify-center lg:justify-end">
-          <div className="relative flex aspect-[4/5] w-full max-w-sm items-center justify-center sm:max-w-md">
+          <div className="relative flex aspect-[4/5] w-full max-w-[346px] items-center justify-center sm:max-w-[403px]">
             <div
               aria-hidden="true"
               className="absolute inset-10 rounded-full bg-kapila-gold/15"
@@ -61,7 +61,8 @@ export function HeroSection({
                 width={image.width ?? 900}
                 height={image.height ?? 1600}
                 priority
-                sizes="(min-width: 1024px) 420px, 80vw"
+                quality={92}
+                sizes="(min-width: 1024px) 380px, 72vw"
                 className="relative h-full w-auto max-w-full object-contain drop-shadow-[0_25px_35px_rgba(59,33,24,0.25)]"
               />
             ) : (

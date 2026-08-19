@@ -54,7 +54,7 @@ async function main() {
   // at all — they sit directly on whatever the page background is.
   const jarMedia = await db.media.upsert({
     where: { id: "media-ghee-jar" },
-    update: { url: "/images/product/ghee-jar.png", width: 900, height: 1600, fileType: "image/png", fileSize: 846948 },
+    update: { url: "/images/product/ghee-jar.png", width: 900, height: 1600, fileType: "image/png", fileSize: 981768 },
     create: {
       id: "media-ghee-jar",
       url: "/images/product/ghee-jar.png",
@@ -62,7 +62,7 @@ async function main() {
       width: 900,
       height: 1600,
       fileType: "image/png",
-      fileSize: 846948,
+      fileSize: 981768,
     },
   });
 
@@ -99,7 +99,7 @@ async function main() {
   // back-to-back.
   const jarHeroMedia = await db.media.upsert({
     where: { id: "media-ghee-jar-hero" },
-    update: { url: "/images/product/ghee-jar-hero.png", width: 1000, height: 1250, fileType: "image/png", fileSize: 690372 },
+    update: { url: "/images/product/ghee-jar-hero.png", width: 1000, height: 1250, fileType: "image/png", fileSize: 792691 },
     create: {
       id: "media-ghee-jar-hero",
       url: "/images/product/ghee-jar-hero.png",
@@ -107,7 +107,7 @@ async function main() {
       width: 1000,
       height: 1250,
       fileType: "image/png",
-      fileSize: 690372,
+      fileSize: 792691,
     },
   });
 

@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  images: {
+    qualities: [75, 92],
+  },
   async headers() {
     return [
       {

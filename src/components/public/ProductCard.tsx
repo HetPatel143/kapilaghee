@@ -19,6 +19,7 @@ export function ProductCard({ product }: { product: ProductWithRelations }) {
             alt={image.altText ?? product.name}
             width={image.width ?? 900}
             height={image.height ?? 1600}
+            quality={92}
             sizes="(min-width: 640px) 288px, 80vw"
             className="h-full max-h-72 w-auto object-contain drop-shadow-[0_16px_24px_rgba(59,33,24,0.15)]"
           />

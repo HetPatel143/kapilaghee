@@ -44,6 +44,7 @@ export function ProductGallery({
           width={active.width ?? 900}
           height={active.height ?? 1600}
           priority
+          quality={92}
           sizes="(min-width: 1024px) 480px, 90vw"
           className="h-full w-auto max-w-full object-contain drop-shadow-[0_20px_30px_rgba(59,33,24,0.18)]"
         />
