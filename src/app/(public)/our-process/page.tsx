@@ -21,7 +21,7 @@ export default async function OurProcessPage() {
         <SectionHeading
           eyebrow="Our Process"
           title="How Kapila Ghee Is Made"
-          description="We only publish process details once they're confirmed and accurate."
+          description="Kapila Ghee is made using the traditional Bilona method — the same hand-churned process passed down for generations."
         />
         <div className="mt-4">
           <ProcessTimeline steps={steps} variant="full" />

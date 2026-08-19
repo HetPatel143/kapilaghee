@@ -346,8 +346,8 @@ async function main() {
     body: "The milk is slowly heated and left to set into curd.",
   });
   await upsertSection("process", "process-step-3", {
-    title: "Hand Churning",
-    body: "The curd is churned by hand with a traditional wooden bilona to separate the butter.",
+    title: "Hand Churning — The Bilona Method",
+    body: "The curd is churned by hand with a traditional wooden bilona to separate the butter — the traditional Bilona method, passed down for generations.",
   });
   await upsertSection("process", "process-step-4", {
     title: "Ghee Preparation",

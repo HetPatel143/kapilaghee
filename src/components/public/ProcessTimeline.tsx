@@ -26,7 +26,11 @@ export function ProcessTimeline({
     return (
       <Section tone="cream">
         <Container>
-          <SectionHeading eyebrow="Our Process" title="How Kapila Ghee Is Made" />
+          <SectionHeading
+            eyebrow="Our Process"
+            title="How Kapila Ghee Is Made"
+            description="Made using the traditional Bilona method — hand-churned the way it always has been."
+          />
           <StepList steps={steps.slice(0, 4)} />
           <div className="mt-10">
             <Link href="/our-process" className="text-sm font-semibold uppercase tracking-[0.1em] text-maroon hover:underline">

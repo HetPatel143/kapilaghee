@@ -6,7 +6,6 @@ import { ProductShowcase } from "@/components/public/ProductShowcase";
 import { WhyKapila } from "@/components/public/WhyKapila";
 import { ProcessTimeline } from "@/components/public/ProcessTimeline";
 import { QualitySection } from "@/components/public/QualitySection";
-import { EverydayUse } from "@/components/public/EverydayUse";
 import { GheeBenefits } from "@/components/public/GheeBenefits";
 import { buildLocalBusinessJsonLd } from "@/lib/structured-data";
 
@@ -46,7 +45,6 @@ export default async function HomePage() {
       <WhyKapila sections={homeSections} />
       <ProcessTimeline steps={processSections} variant="teaser" />
       <QualitySection homeSections={homeSections} hasDocuments={hasQualityDocuments} />
-      <EverydayUse sections={homeSections} />
       <GheeBenefits sections={homeSections} />
     </>
   );
