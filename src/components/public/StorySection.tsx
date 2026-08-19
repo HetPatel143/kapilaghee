@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { Container } from "@/components/shared/Container";
 import { Section } from "@/components/shared/Section";
+import Link from "next/link";
 import { SectionHeading } from "@/components/shared/SectionHeading";
-import { LinkButton } from "@/components/shared/Button";
 import type { PageSectionWithRelations } from "@/lib/types";
 import { findSection } from "@/lib/types";
 
@@ -17,9 +17,9 @@ export function StorySection({ sections }: { sections: PageSectionWithRelations[
         <div className={image ? "" : "lg:col-span-2"}>
           <SectionHeading eyebrow="Our Story" title={teaser.title ?? "Our Story"} description={teaser.body ?? undefined} />
           <div className="mt-7">
-            <LinkButton href="/our-story" variant="secondary">
-              Read Our Story
-            </LinkButton>
+            <Link href="/our-story" className="text-sm font-semibold uppercase tracking-[0.1em] text-maroon hover:underline">
+              Read Our Story &rarr;
+            </Link>
           </div>
         </div>
         {image ? (

@@ -49,17 +49,20 @@ async function main() {
   }
 
   // ---------- Media ----------
+  // Padded to the same 900x1600 canvas as the tin photos (cream-filled, matching the
+  // page background) so all three gallery images render at a consistent visual size —
+  // the original 320x320 crop looked tiny/inconsistent next to the tall tin photos.
   const jarMedia = await db.media.upsert({
     where: { id: "media-ghee-jar" },
-    update: {},
+    update: { width: 900, height: 1600, fileSize: 59069 },
     create: {
       id: "media-ghee-jar",
       url: "/images/product/ghee-jar.jpeg",
       altText: "Kapila Dairy Farm Desi Cow Ghee glass jar on a plain background",
-      width: 320,
-      height: 320,
+      width: 900,
+      height: 1600,
       fileType: "image/jpeg",
-      fileSize: 14262,
+      fileSize: 59069,
     },
   });
 
@@ -268,6 +271,26 @@ async function main() {
     title: "Everyday Use",
     body: "A spoonful of Kapila Ghee is a simple way to bring pure, traditional ghee into everyday cooking.",
   });
+  await upsertSection("home", "benefits-intro", {
+    title: "Why Ghee, Every Day",
+    body: "A few reasons Kapila Ghee earns a place in Indian kitchens every day.",
+  });
+  await upsertSection("home", "benefits-point-1", {
+    title: "Rich, Traditional Flavor",
+    body: "Deepens the flavor of everyday dishes — rotis, dals, and rice — the way ghee has for generations in Indian kitchens.",
+  });
+  await upsertSection("home", "benefits-point-2", {
+    title: "High Smoke Point",
+    body: "Well suited to Indian cooking methods like tempering and frying, without breaking down at high heat.",
+  });
+  await upsertSection("home", "benefits-point-3", {
+    title: "A Traditional Staple",
+    body: "A calorie-dense, traditional fat that has been part of Indian diets for generations.",
+  });
+  await upsertSection("home", "benefits-point-4", {
+    title: "Free From Additives",
+    body: "Just ghee — nothing added, nothing artificial.",
+  });
   await upsertSection("home", "final-cta", {
     title: "Have questions about Kapila Ghee?",
     body: "We'd be happy to help.",
@@ -283,11 +306,24 @@ async function main() {
     body: "We're putting together the full story of Kapila Dairy Farm — our journey, our philosophy, and the people behind it. Check back soon.",
   });
 
-  // Process page — intentionally NO step content seeded.
-  // The Bilona/hand-churning process shown in supplied promotional material is not yet
-  // confirmed as an accurate description of current production (see docs/requirements.md §2,
-  // item 3). Publishing it here would present an unverified claim as fact, so this page is
-  // left content-empty on purpose; the UI shows an honest "being finalized" state instead.
+  // Process page — confirmed by the business (2026-08-19) as an accurate description of
+  // how Kapila Ghee is made, resolving the open item flagged in docs/requirements.md §2.
+  await upsertSection("process", "process-step-1", {
+    title: "Milk Collection",
+    body: "Fresh Gir cow milk is collected as the starting point for our ghee.",
+  });
+  await upsertSection("process", "process-step-2", {
+    title: "Curd Making",
+    body: "The milk is slowly heated and left to set into curd.",
+  });
+  await upsertSection("process", "process-step-3", {
+    title: "Hand Churning",
+    body: "The curd is churned by hand with a traditional wooden bilona to separate the butter.",
+  });
+  await upsertSection("process", "process-step-4", {
+    title: "Ghee Preparation",
+    body: "The butter is slow-heated until it becomes the ghee you receive.",
+  });
 
   // Quality page
   await upsertSection("quality", "quality-intro", {

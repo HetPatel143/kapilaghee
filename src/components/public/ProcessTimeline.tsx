@@ -1,8 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/shared/Container";
 import { Section } from "@/components/shared/Section";
 import { SectionHeading } from "@/components/shared/SectionHeading";
-import { LinkButton } from "@/components/shared/Button";
 import { EmptyState } from "@/components/shared/EmptyState";
 import type { PageSectionWithRelations } from "@/lib/types";
 
@@ -29,9 +29,9 @@ export function ProcessTimeline({
           <SectionHeading eyebrow="Our Process" title="How Kapila Ghee Is Made" />
           <StepList steps={steps.slice(0, 4)} />
           <div className="mt-10">
-            <LinkButton href="/our-process" variant="secondary">
-              See Full Process
-            </LinkButton>
+            <Link href="/our-process" className="text-sm font-semibold uppercase tracking-[0.1em] text-maroon hover:underline">
+              See Full Process &rarr;
+            </Link>
           </div>
         </Container>
       </Section>
