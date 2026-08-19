@@ -49,12 +49,12 @@ async function main() {
   }
 
   // ---------- Media ----------
-  // Padded to the same 900x1600 canvas as the tin photos (cream-filled, matching the
-  // page background) so all three gallery images render at a consistent visual size —
-  // the original 320x320 crop looked tiny/inconsistent next to the tall tin photos.
+  // Auto-cropped to each product's bounding box and re-centered on a shared 900x1600
+  // cream canvas (matching the page background) so all three gallery images render at a
+  // consistent visual scale with no leftover background-box artifacts.
   const jarMedia = await db.media.upsert({
     where: { id: "media-ghee-jar" },
-    update: { width: 900, height: 1600, fileSize: 59069 },
+    update: { width: 900, height: 1600, fileSize: 160373 },
     create: {
       id: "media-ghee-jar",
       url: "/images/product/ghee-jar.jpeg",
@@ -62,13 +62,13 @@ async function main() {
       width: 900,
       height: 1600,
       fileType: "image/jpeg",
-      fileSize: 59069,
+      fileSize: 160373,
     },
   });
 
   const tin5kgMedia = await db.media.upsert({
     where: { id: "media-ghee-tin-5kg" },
-    update: {},
+    update: { width: 900, height: 1600, fileSize: 196066 },
     create: {
       id: "media-ghee-tin-5kg",
       url: "/images/product/ghee-tin-5kg.jpeg",
@@ -76,13 +76,13 @@ async function main() {
       width: 900,
       height: 1600,
       fileType: "image/jpeg",
-      fileSize: 72905,
+      fileSize: 196066,
     },
   });
 
   const tin15kgMedia = await db.media.upsert({
     where: { id: "media-ghee-tin-15kg" },
-    update: {},
+    update: { width: 900, height: 1600, fileSize: 217085 },
     create: {
       id: "media-ghee-tin-15kg",
       url: "/images/product/ghee-tin-15kg.jpeg",
@@ -90,7 +90,7 @@ async function main() {
       width: 900,
       height: 1600,
       fileType: "image/jpeg",
-      fileSize: 137692,
+      fileSize: 217085,
     },
   });
 

@@ -6,11 +6,8 @@ import { ProductShowcase } from "@/components/public/ProductShowcase";
 import { WhyKapila } from "@/components/public/WhyKapila";
 import { ProcessTimeline } from "@/components/public/ProcessTimeline";
 import { QualitySection } from "@/components/public/QualitySection";
-import { StorySection } from "@/components/public/StorySection";
 import { EverydayUse } from "@/components/public/EverydayUse";
 import { GheeBenefits } from "@/components/public/GheeBenefits";
-import { LocationSection } from "@/components/public/LocationSection";
-import { FinalCTA } from "@/components/public/FinalCTA";
 import { buildLocalBusinessJsonLd } from "@/lib/structured-data";
 
 const siteUrl = process.env.SITE_URL ?? "https://www.kapiladairyfarm.com";
@@ -49,11 +46,8 @@ export default async function HomePage() {
       <WhyKapila sections={homeSections} />
       <ProcessTimeline steps={processSections} variant="teaser" />
       <QualitySection homeSections={homeSections} hasDocuments={hasQualityDocuments} />
-      <StorySection sections={homeSections} />
       <EverydayUse sections={homeSections} />
       <GheeBenefits sections={homeSections} />
-      <LocationSection settings={settings} />
-      <FinalCTA settings={settings} sections={homeSections} />
     </>
   );
 }
