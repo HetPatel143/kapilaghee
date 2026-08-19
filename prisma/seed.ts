@@ -49,64 +49,65 @@ async function main() {
   }
 
   // ---------- Media ----------
-  // Auto-cropped to each product's bounding box and re-centered on a shared 900x1600
-  // cream canvas (matching the page background) so all three gallery images render at a
-  // consistent visual scale with no leftover background-box artifacts.
+  // Background removed (transparent PNG) and re-centered on a shared 900x1600 canvas so
+  // all three gallery images render at a consistent visual scale with no background box
+  // at all — they sit directly on whatever the page background is.
   const jarMedia = await db.media.upsert({
     where: { id: "media-ghee-jar" },
-    update: { width: 900, height: 1600, fileSize: 160373 },
+    update: { url: "/images/product/ghee-jar.png", width: 900, height: 1600, fileType: "image/png", fileSize: 846948 },
     create: {
       id: "media-ghee-jar",
-      url: "/images/product/ghee-jar.jpeg",
-      altText: "Kapila Dairy Farm Desi Cow Ghee glass jar on a plain background",
+      url: "/images/product/ghee-jar.png",
+      altText: "Kapila Dairy Farm Desi Cow Ghee glass jar, background removed",
       width: 900,
       height: 1600,
-      fileType: "image/jpeg",
-      fileSize: 160373,
+      fileType: "image/png",
+      fileSize: 846948,
     },
   });
 
   const tin5kgMedia = await db.media.upsert({
     where: { id: "media-ghee-tin-5kg" },
-    update: { width: 900, height: 1600, fileSize: 196066 },
+    update: { url: "/images/product/ghee-tin-5kg.png", width: 900, height: 1600, fileType: "image/png", fileSize: 882476 },
     create: {
       id: "media-ghee-tin-5kg",
-      url: "/images/product/ghee-tin-5kg.jpeg",
-      altText: "Kapila Dairy Farm Desi Cow Ghee, 5 KG tin",
+      url: "/images/product/ghee-tin-5kg.png",
+      altText: "Kapila Dairy Farm Desi Cow Ghee, 5 KG tin, background removed",
       width: 900,
       height: 1600,
-      fileType: "image/jpeg",
-      fileSize: 196066,
+      fileType: "image/png",
+      fileSize: 882476,
     },
   });
 
   const tin15kgMedia = await db.media.upsert({
     where: { id: "media-ghee-tin-15kg" },
-    update: { width: 900, height: 1600, fileSize: 217085 },
+    update: { url: "/images/product/ghee-tin-15kg.png", width: 900, height: 1600, fileType: "image/png", fileSize: 968500 },
     create: {
       id: "media-ghee-tin-15kg",
-      url: "/images/product/ghee-tin-15kg.jpeg",
-      altText: "Kapila Dairy Farm Desi Cow Ghee, 15 KG tin",
+      url: "/images/product/ghee-tin-15kg.png",
+      altText: "Kapila Dairy Farm Desi Cow Ghee, 15 KG tin, background removed",
       width: 900,
       height: 1600,
-      fileType: "image/jpeg",
-      fileSize: 217085,
+      fileType: "image/png",
+      fileSize: 968500,
     },
   });
 
-  // A distinct, tighter crop of the same jar photo used just for the homepage Hero, so the
-  // Hero and the product gallery don't show the exact same framing back-to-back.
+  // A distinct, tighter crop of the same jar photo (background removed) used just for the
+  // homepage Hero, so the Hero and the product gallery don't show the exact same framing
+  // back-to-back.
   const jarHeroMedia = await db.media.upsert({
     where: { id: "media-ghee-jar-hero" },
-    update: { width: 1000, height: 1250, fileSize: 146811 },
+    update: { url: "/images/product/ghee-jar-hero.png", width: 1000, height: 1250, fileType: "image/png", fileSize: 690372 },
     create: {
       id: "media-ghee-jar-hero",
-      url: "/images/product/ghee-jar-hero.jpeg",
-      altText: "Kapila Dairy Farm Desi Cow Ghee glass jar, close up",
+      url: "/images/product/ghee-jar-hero.png",
+      altText: "Kapila Dairy Farm Desi Cow Ghee glass jar, close up, background removed",
       width: 1000,
       height: 1250,
-      fileType: "image/jpeg",
-      fileSize: 146811,
+      fileType: "image/png",
+      fileSize: 690372,
     },
   });
 
