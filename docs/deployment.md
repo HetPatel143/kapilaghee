@@ -1,19 +1,49 @@
 # Kapila Dairy Farm — Deployment Guide
 
-Status: Prompt 4 (production readiness)
+Status: Prompt 4 (production readiness) + Vercel deploy fix
 Last updated: 2026-08-18
 
-No specific hosting provider has been chosen yet, so this guide is written for a generic
-Node.js hosting environment (Vercel, Railway, Render, a VPS, etc.) and calls out the one
-place the choice of provider actually matters (file storage — see §4).
+The project is now deploying to Vercel. This guide covers that path first, then stays
+generic for anyone hosting elsewhere (Railway, Render, a VPS, etc.) — the one place the
+choice of provider actually matters is file storage (§4).
+
+## 0. Vercel Quick Fix (if your build is failing right now)
+
+If your Vercel build fails with `Environment variable not found: DATABASE_URL` or
+`Can't reach database server`, that's because the app needs a real, internet-reachable
+PostgreSQL database *before* it can build — Next.js fetches content from the database
+while pre-rendering pages, and Vercel's ephemeral build environment has no database of
+its own.
+
+1. **Get a Postgres database.** Easiest with Vercel: your project's **Storage** tab →
+   **Create Database** → Postgres (or connect Neon/Supabase via the Vercel Marketplace).
+   This automatically adds a `DATABASE_URL` environment variable to your Vercel project.
+   If you provisioned a database elsewhere, add `DATABASE_URL` yourself under
+   **Project Settings → Environment Variables**.
+2. **Add `SITE_URL`** in the same Environment Variables screen — your real deployed URL
+   (e.g. `https://kapilaghee.vercel.app` or your custom domain once attached).
+3. **Apply the schema and seed the database**, from your own machine, pointed at that
+   same production `DATABASE_URL` (copy the connection string from Vercel):
+   ```bash
+   # in your local project folder, temporarily:
+   DATABASE_URL="<paste the production connection string>" npx prisma db push
+   DATABASE_URL="<paste the production connection string>" ADMIN_EMAIL="you@yourdomain.com" ADMIN_PASSWORD="<a strong password>" npm run db:seed
+   ```
+   (On Windows PowerShell: `$env:DATABASE_URL="..."; npx prisma db push` instead of the
+   inline `VAR=value` form.)
+4. **Redeploy** — either push a new commit, or use Vercel's "Redeploy" button on the
+   failed deployment now that the database exists and the env vars are set.
+
+This only needs to be done once per environment (production, and again for any preview
+environment if you want previews to have their own database).
 
 ## 1. Requirements
 
 | Requirement | Version / Notes |
 |---|---|
 | Node.js | 20 LTS or newer (developed and tested on 22.13) |
-| Database | PostgreSQL 14+ in production (see `docs/database.md` — local dev uses SQLite, production must use Postgres) |
-| File storage | See §4 below — local disk works only on a host with a persistent, writable filesystem |
+| Database | PostgreSQL 14+, in every environment including local dev (see `docker-compose.yml`) |
+| File storage | See §4 below — local disk works only on a host with a persistent, writable filesystem (**not** Vercel) |
 | npm | Whatever ships with your Node version — no other package manager was used or tested |
 
 ## 2. Environment Variables
@@ -30,35 +60,35 @@ full comments on where each is read):
 Never commit `.env` — it's gitignored. `.env.example` contains variable *names* only, no
 real values.
 
-## 3. First-Time Setup
+## 3. First-Time Setup (local development)
 
 ```bash
 npm install
-cp .env.example .env
-# edit .env: set DATABASE_URL to your Postgres instance, SITE_URL to your real domain,
-# and choose a real ADMIN_EMAIL/ADMIN_PASSWORD
-
-npx prisma migrate deploy   # applies schema to the database (see note below)
+docker compose up -d        # starts local Postgres — see docker-compose.yml
+cp .env.example .env        # already points at the docker-compose Postgres by default
+npx prisma db push          # applies the schema
 npm run db:seed             # seeds BusinessSettings placeholder, sample product, FAQs,
                              # documents, and the first admin user
-npm run build
-npm start
+npm run dev
 ```
+
+For production (Vercel or otherwise), see §0 above for the Vercel-specific path, or §5
+below for the general database setup steps.
 
 ### Note on migrations
 
-This project was developed locally against SQLite using `prisma db push` (schema sync,
-no migration history — appropriate for pre-launch development with no production data at
-stake). **Before the first production deploy**, generate a real migration history against
-a local/staging Postgres instance:
+This project uses `prisma db push` (schema sync, no migration history) throughout —
+appropriate for a pre-launch project with no production data at stake yet. Once real
+business data exists in production, switch to tracked migrations before making further
+schema changes:
 
 ```bash
-# with DATABASE_URL pointed at a real (throwaway/staging) Postgres instance:
+# with DATABASE_URL pointed at a local/staging Postgres instance:
 npx prisma migrate dev --name init
 ```
 
-Commit the generated `prisma/migrations/` folder. From then on, deploy with
-`npx prisma migrate deploy` (not `db push`) so schema changes are tracked and reversible.
+Commit the generated `prisma/migrations/` folder, and from then on deploy schema changes
+with `npx prisma migrate deploy` (not `db push`) so they're tracked and reversible.
 
 ### Note on seeding production
 
@@ -85,14 +115,24 @@ the intended design. Every caller (`src/app/actions/admin-products.ts`,
 `admin-media.ts`, `admin-documents.ts`, `admin-content.ts`) goes through this one module,
 so this is a contained, single-file change — not a rewrite.
 
-## 5. Database Migration to Production
+## 5. Database Setup for Production
 
-1. Provision a PostgreSQL database (managed service recommended: Neon, Supabase, RDS, etc.).
-2. Set `DATABASE_URL` to its connection string.
-3. In `prisma/schema.prisma`, change `provider = "sqlite"` to `provider = "postgresql"`.
-4. Run `npx prisma migrate deploy` (after generating the migration per §3's note).
-5. Run `npm run db:seed` once (see the seeding caveat above) or manually create
+1. Provision a PostgreSQL database (managed service recommended: Vercel Postgres, Neon,
+   Supabase, RDS, etc. — Vercel Postgres/Neon-via-Marketplace are the least setup if
+   you're already hosting on Vercel, since they wire `DATABASE_URL` in automatically).
+2. Set `DATABASE_URL` (and `SITE_URL`) in your hosting provider's environment variables.
+3. Run `npx prisma db push` (or `prisma migrate deploy` once you've adopted tracked
+   migrations per §3's note) against that `DATABASE_URL`.
+4. Run `npm run db:seed` once (see the seeding caveat above) or manually create
    `BusinessSettings` and the first `AdminUser` via a one-off script.
+
+**Important:** Next.js pre-renders most public pages at *build* time, which means the
+database must already exist, be reachable, and have its schema applied **before** your
+first successful build — steps 1–3 above have to happen before you deploy, not after (see
+§0 for the exact Vercel sequence). `generateStaticParams` for the product page is written
+to degrade gracefully (skips static generation rather than failing the whole build) if the
+database is briefly unreachable, but most other pages are not — a reachable, migrated
+database is a hard prerequisite for a successful build, not just for runtime.
 
 ## 6. Cookies, HTTPS, and Sessions
 
@@ -138,11 +178,10 @@ once real business data exists, appropriate to the scale of a small-business sit
 ## 9. Production Configuration Checklist
 
 - [ ] `SITE_URL` set to the real domain (not localhost)
-- [ ] `DATABASE_URL` points to production Postgres, not the dev SQLite file
-- [ ] `prisma/schema.prisma` datasource `provider` set to `"postgresql"`
-- [ ] Migrations applied via `prisma migrate deploy`, not `db push`
+- [ ] `DATABASE_URL` points to a real, reachable production Postgres instance
+- [ ] Database schema applied (`prisma db push` or `migrate deploy`) **before** the first build
 - [ ] `ADMIN_PASSWORD` is a strong, unique value — not the seed placeholder
-- [ ] File storage swapped to object storage if deploying to a serverless/ephemeral host (§4)
+- [ ] File storage swapped to object storage if deploying to a serverless/ephemeral host like Vercel (§4) — otherwise admin-uploaded images/documents will disappear after each deploy
 - [ ] HTTPS is terminated in front of the app (required for admin cookies to work — §6)
 - [ ] `npm run build` succeeds cleanly with production env vars set
 - [ ] Real `robots.txt`/`sitemap.xml` reachable at the production domain and pointing at

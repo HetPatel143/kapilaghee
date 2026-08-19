@@ -6,18 +6,15 @@ Last updated: 2026-08-18
 
 ## Datasource
 
-**Local development:** SQLite (`prisma/dev.db`), configured via `DATABASE_URL` in `.env`.
-No setup required — `npx prisma db push` creates the file.
+**PostgreSQL everywhere** — local development and production both run Postgres, per
+`docs/architecture.md` §2/§17. Local dev uses Docker (`docker-compose.yml`); see
+`docs/deployment.md` §3 for setup and §0 for the Vercel-specific first-deploy sequence.
 
-**Production:** PostgreSQL, per `docs/architecture.md` §2/§17. To switch: change
-`provider = "sqlite"` to `provider = "postgresql"` in `prisma/schema.prisma`, point
-`DATABASE_URL` at a real Postgres instance, and run `npx prisma migrate deploy`. The
-schema deliberately avoids SQLite-only or Postgres-only features so this is the only
-change required — see the note at the top of `prisma/schema.prisma`.
-
-Local dev was built against SQLite rather than Postgres because no Postgres server/Docker
-daemon was available in the implementation environment — this is a development-time
-substitution only, not an architecture change.
+(Earlier in development, local work used SQLite as a zero-setup fallback while no local
+Postgres/Docker daemon was reachable. The schema deliberately avoided SQLite-only or
+Postgres-only features throughout, so that was a pure development-time substitution, not
+an architecture decision — it's since been switched to Postgres in `prisma/schema.prisma`
+to match production exactly.)
 
 ## Entity-Relationship Diagram
 

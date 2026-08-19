@@ -12,8 +12,17 @@ const siteUrl = process.env.SITE_URL ?? "https://www.kapiladairyfarm.com";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const products = await getActiveProducts();
-  return products.map((p) => ({ slug: p.slug }));
+  // Never let a missing/unreachable database at build time fail the whole build (e.g. the
+  // very first deploy before DATABASE_URL is configured) — fall back to rendering product
+  // pages on demand instead of pre-rendering them. Once the DB is reachable, a normal
+  // rebuild statically generates them again.
+  try {
+    const products = await getActiveProducts();
+    return products.map((p) => ({ slug: p.slug }));
+  } catch (error) {
+    console.error("generateStaticParams: could not reach the database, skipping SSG for product pages.", error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

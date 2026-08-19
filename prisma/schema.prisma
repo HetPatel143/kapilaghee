@@ -1,18 +1,18 @@
 // Kapila Dairy Farm — Prisma schema
 // Content model per docs/architecture.md §4.
 //
-// NOTE ON DATASOURCE: production is designed for PostgreSQL (see docs/architecture.md §2).
-// This local/dev environment has no running Postgres instance available, so local development
-// uses SQLite (zero-setup, file-based) via the DATABASE_URL below. The schema intentionally
-// avoids Postgres-only features so switching `provider = "postgresql"` + a real DATABASE_URL
-// is the only change required to move to production.
+// PostgreSQL in every environment, including local dev (via Docker — see
+// docker-compose.yml). Earlier local development used SQLite as a zero-setup fallback
+// when no Postgres instance was reachable; switched to Postgres everywhere once Docker
+// became available, since Vercel's serverless functions can't use a local SQLite file
+// (no persistent/shared filesystem) — this is now the same database engine in dev and prod.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

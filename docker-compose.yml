@@ -1,0 +1,23 @@
+# Local PostgreSQL for development — matches production's database engine.
+# Start:  docker compose up -d
+# Stop:   docker compose down
+# Wipe:   docker compose down -v
+#
+# Then set in .env:
+#   DATABASE_URL="postgresql://kapila:kapila_dev_pw@localhost:55432/kapilaghee"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kapilaghee-postgres
+    environment:
+      POSTGRES_USER: kapila
+      POSTGRES_PASSWORD: kapila_dev_pw
+      POSTGRES_DB: kapilaghee
+    ports:
+      - "55432:5432"
+    volumes:
+      - kapilaghee-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  kapilaghee-postgres-data:
